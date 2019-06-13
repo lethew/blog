@@ -1,0 +1,10 @@
+body {
+    background: url("../images/bg.jpg");
+}
+div {
+    text-overflow:ellipsis;
+}
+.padding-top-bottom-05{
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}

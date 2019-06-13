@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>吴昭 | 个人博客</title>
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="plugins/editor-md/css/editormd.css" />
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="/images/3.jpg" alt="First slide" height="200">
+                <div class="carousel-caption d-none d-md-block text-left" style="left: 1.5em;right: 1.5em;bottom: 40px;color: #0F192A">
+                    <div class="row">
+                        <div class="col-6">
+                            <h1>忧忧博客</h1>
+                            <p>聚也忧兮，散也忧兮，忧忧兮！</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            fasdfasfasfasdf
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tag.html">标签</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        实验室
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">照片墙</a>
+                        <a class="dropdown-item" href="#">音乐室</a>
+                        <a class="dropdown-item" href="#">图书馆</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-9">
+            <div class="card">
+                <div class="card-header">
+                    <span>文章列表</span><span th:text="${tag}" id="tag-span"></span>
+                </div>
+                <div class="card-body padding-top-bottom-05" v-for="article in articles">
+                    <div class="card-title">
+                        <a :href="'/detail/'+article.id+'.html'" class="font-weight-bold">{{ article.title }}</a>
+                        <span class="float-right font-weight-light form-control-sm">阅读（<span>{{article.viewTimes}}</span>）</span>
+                        <span class="float-right font-weight-light form-control-sm">评论（<span>{{article.viewTimes}}</span>）</span>
+                    </div>
+                    <div class="card-text" v-html="parseMd(article.summary)"></div>
+                    <div class="card-deck row">
+                        <ol class="breadcrumb col-5 bg-transparent font-weight-light form-control-sm" style="margin-bottom: 0;padding-bottom:0;">
+                            <li class="breadcrumb-item">发布于 {{getNowFormatDate(article.createTime)}}</li>
+                        </ol>
+                        <ol class="breadcrumb col-7 bg-transparent font-weight-light form-control-sm" style="margin-bottom: 0;padding-bottom:0; ">
+                            <li class="breadcrumb-item" v-for="tag in article.tags">{{ tag }}</li>
+                        </ol>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="card-body padding-top-bottom-05" style="text-align: center;">
+                    <a v-on:click="loadArticle" class="font-weight-light">{{loadString}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">关于</div>
+                <div class="card-body"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">标签</div>
+                <div class="card-body">
+                    <a  th:each="tag : ${tags}" th:href="${'?tag='+tag.name}" class="badge badge-primary" style="margin-right: 1em" th:text="${tag.name+' ('+tag.size+')'}">Java(12)</a> &nbsp;
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">热门文章</div>
+                <div class="card-body"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">友情连接</div>
+                <div class="card-body"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div >
+<div id="parse-md" style="display: none"><textarea></textarea></div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="plugins/editor-md/lib/marked.min.js"></script>
+<script src="plugins/editor-md/lib/prettify.min.js"></script>
+<script src="plugins/editor-md/lib/raphael.min.js"></script>
+<script src="plugins/editor-md/lib/underscore.min.js"></script>
+<script src="plugins/editor-md/lib/sequence-diagram.min.js"></script>
+<script src="plugins/editor-md/lib/flowchart.min.js"></script>
+<script src="plugins/editor-md/lib/editormd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    function formatNumber(n) {
+        n = n.toString()
+        return n[1] ? n : '0' + n
+    }
+    function formatTime(date,format) {
+
+        var formateArr  = ['Y','M','D','h','m','s'];
+        var returnArr   = [];
+
+        returnArr.push(date.getFullYear());
+        returnArr.push(formatNumber(date.getMonth() + 1));
+        returnArr.push(formatNumber(date.getDate()));
+
+        returnArr.push(formatNumber(date.getHours()));
+        returnArr.push(formatNumber(date.getMinutes()));
+        returnArr.push(formatNumber(date.getSeconds()));
+
+        for (var i in returnArr)
+        {
+            format = format.replace(formateArr[i], returnArr[i]);
+        }
+        return format;
+    }
+    Window.prototype.getNowFormatDate = function(time) {
+        var date = new Date(time); // 增加8小时
+        return formatTime(date, 'Y-M-D h:m:s')
+    }
+
+    Window.prototype.parseMd = function (md) {
+        var testEditor = editormd.markdownToHTML("parse-md", {
+            markdown:md,
+            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            emoji           : true,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : false,  // 默认不解析
+            sequenceDiagram : true,  // 默认不解析
+        });
+        var html = testEditor.html();
+        testEditor.html("");
+        return html;
+    }
+
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            loadString:"加载更多",
+            page_index:0,
+            articles:[]
+        },
+        created:function(){
+            this.loadArticle();
+        },
+        methods:{
+            loadArticle:function () {
+                let _this = this;
+                if(_this.page_index >= 0){
+                    let tag_key = $("#tag-span").html()
+                    let url = "/article/"+_this.page_index;
+                    if(tag_key){
+                        url += "/"+tag_key.substring(1);
+                    }
+                    $.get(url, function (response) {
+                        console.log(response)
+                        if(response.data.next){
+                            _this.page_index += 1;
+                        }else{
+                            _this.page_index = -1;
+                            _this.loadString = "没有了!!!!";
+                        }
+                        _this.articles = _this.articles.concat(response.data.data)
+
+                    })
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

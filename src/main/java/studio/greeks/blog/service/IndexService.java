@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import studio.greeks.blog.model.Article;
+import studio.greeks.blog.model.Link;
 import studio.greeks.blog.model.Tag;
 import studio.greeks.blog.repository.ArticleRepository;
+import studio.greeks.blog.repository.LinkRepository;
 import studio.greeks.blog.repository.TagRepository;
 import studio.greeks.blog.restful.Pager;
+import studio.greeks.blog.vo.FragmentVo;
 import studio.greeks.blog.vo.IndexArticleVo;
+import studio.greeks.blog.vo.IndexLinkVo;
 import studio.greeks.blog.vo.IndexTagVo;
 
 import java.util.*;
@@ -23,22 +27,24 @@ public class IndexService {
 
     @Autowired private ArticleRepository articleRepository;
     @Autowired private TagRepository tagRepository;
+    @Autowired private LinkRepository linkRepository;
+
+    public FragmentVo getFragmentVo(String title, String current){
+        FragmentVo fragmentVo = new FragmentVo(title, current);
+        fragmentVo.setTags(findAllTag());
+        fragmentVo.setHots(getHotsArticle());
+        fragmentVo.setFriends(findAllLinks());
+        fragmentVo.setHots(getHotsArticle());
+        return fragmentVo;
+    }
 
     public Pager<IndexArticleVo> page(String tagStr, int pageIndex){
-        Article example = new Article();
-        example.setPublished(Boolean.TRUE);
-        if(null != tagStr) {
-            Tag exampleTag = new Tag();
-            exampleTag.setName(tagStr);
-            Optional<Tag> tag = tagRepository.findOne(Example.of(exampleTag));
-            tag.ifPresent(t -> example.setTags(new HashSet<>(Collections.singletonList(t))));
-            if(!tag.isPresent()){
-                return new Pager<>();
-            }
-        }
-        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
-        PageRequest pageRequest = PageRequest.of(pageIndex, PAGE_SIZE, sort);
-        Page<Article> all = articleRepository.findAll(Example.of(example), pageRequest);
+        Tag tag = null == tagStr?null:tagRepository.getFirstByName(tagStr).orElse(null);
+        PageRequest pageRequest = PageRequest.of(pageIndex, PAGE_SIZE);
+        Page<Article> all = tag == null
+                ?articleRepository.findAllByPublishedIsTrueOrderByCreateTimeDesc(pageRequest)
+                :articleRepository.findAllByTagsContainsAndPublishedIsTrueOrderByCreateTimeDesc(tag, pageRequest);
+
         Pager<IndexArticleVo> pager = new Pager<>(all);
         List<IndexArticleVo> vos = new ArrayList<>();
         for (Article article : all) {
@@ -48,7 +54,7 @@ public class IndexService {
         return pager;
     }
 
-    public List<IndexTagVo> findAllTag(){
+    private List<IndexTagVo> findAllTag(){
         List<Tag> all = tagRepository.findAll();
         List<IndexTagVo> tagVos = new ArrayList<>(all.size());
         for (Tag tag : all) {
@@ -56,8 +62,21 @@ public class IndexService {
         }
         return tagVos;
     }
-
-    public List<IndexArticleVo> getHotsArticle() {
-        return null;
+    private List<IndexLinkVo> findAllLinks(){
+        List<Link> all = linkRepository.findAll();
+        List<IndexLinkVo> linkVos = new ArrayList<>(all.size());
+        for (Link link : all) {
+            linkVos.add(IndexLinkVo.of(link));
+        }
+        return linkVos;
+    }
+    private List<IndexArticleVo> getHotsArticle() {
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
+        Page<Article> all = articleRepository.findAllByPublishedIsTrueOrderByViewTimesDesc(pageRequest);
+        List<IndexArticleVo> vos = new ArrayList<>();
+        for (Article article : all) {
+            vos.add(IndexArticleVo.of(article));
+        }
+        return vos;
     }
 }

@@ -3,6 +3,7 @@ package studio.greeks.blog.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import studio.greeks.blog.model.Tag;
 
 /**
@@ -13,8 +14,11 @@ import studio.greeks.blog.model.Tag;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IndexTagVo {
+    @NonNull
     private Integer id;
+    @NonNull
     private String name;
+    @NonNull
     private Integer size;
 
     public static IndexTagVo of(Tag tag){

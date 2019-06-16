@@ -23,12 +23,13 @@ public class IndexArticleVo {
     private String summary;
     private Date createTime;
     private Long viewTimes;
+    private Integer comments;
     private String editorType;
     private List<String> tags;
 
     public static IndexArticleVo of(Article article){
         IndexArticleVo articleVo = new IndexArticleVo(article.getId(), article.getTitle(), article.getSummary(),
-                article.getCreateTime(), article.getViewTimes(), article.getEditorType(), new ArrayList<>());
+                article.getCreateTime(), article.getViewTimes(),article.getComments().size(), article.getEditorType(), new ArrayList<>());
         for (Tag tag : article.getTags()) {
             articleVo.getTags().add(tag.getName());
         }

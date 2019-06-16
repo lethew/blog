@@ -23,12 +23,13 @@ public class DetailArticleVo {
     private String content;
     private Date createTime;
     private Long viewTimes;
+    private Integer comments;
     private String editorType;
     private List<String> tags;
 
     public static DetailArticleVo of(Article article){
         DetailArticleVo articleVo = new DetailArticleVo(article.getId(), article.getTitle(), article.getContent(),
-                article.getCreateTime(), article.getViewTimes(), article.getEditorType(), new ArrayList<>());
+                article.getCreateTime(), article.getViewTimes(),article.getComments().size(), article.getEditorType(), new ArrayList<>());
         for (Tag tag : article.getTags()) {
             articleVo.getTags().add(tag.getName());
         }

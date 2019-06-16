@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="commonHeader(links,styles)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${'忧忧博客 | '+fragment.title}">忧兮 | 首页</title>
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/plugins/editor-md/css/editormd.css}" />
+    <link rel="stylesheet" th:href="@{/plugins/open-iconic/font/css/open-iconic-bootstrap.min.css}"/>
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+    <!--/* Per-page placeholder for additional styles */-->
+    <th:block th:replace="${styles}" />
+</head>
+<body>
+<div th:fragment="commonNav">
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="/images/3.jpg" alt="First slide" height="200">
+                <div class="carousel-caption d-none d-md-block text-left" style="left: 1.5em;right: 1.5em;bottom: 40px;color: #0F192A">
+                    <div class="row">
+                        <div class="col-6">
+                            <h1>忧忧博客</h1>
+                            <p>聚也忧兮，散也忧兮，忧忧兮！</p>
+                        </div>
+                        <div class="col-6 text-right">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li th:if="${fragment.current} eq 'index'" class="nav-item active">
+                    <a class="nav-link" href="/">首页 <span class="sr-only" th:if="${fragment.current} eq 'index'">(current)</span></a>
+                </li>
+                <li th:if="${fragment.current} ne 'index'" class="nav-item">
+                    <a class="nav-link" href="/">首页 <span class="sr-only" th:if="${fragment.current} eq 'index'">(current)</span></a>
+                </li>
+
+                <li th:if="${fragment.current} eq 'archive'" class="nav-item active">
+                    <a class="nav-link" href="/archive.html">归档 <span class="sr-only" th:if="${fragment.current} eq 'archive'">(current)</span></a>
+                </li>
+                <li th:if="${fragment.current} ne 'archive'" class="nav-item">
+                    <a class="nav-link" href="/archive.html">归档 <span class="sr-only" th:if="${fragment.current} eq 'archive'">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        实验室
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">照片墙</a>
+                        <a class="dropdown-item" href="#">音乐室</a>
+                        <a class="dropdown-item" href="#">图书馆</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="col-3"  th:fragment="rightNav">
+    <div class="card">
+        <div class="card-header">关于</div>
+        <div class="card-body"></div>
+    </div>
+    <div class="card">
+        <div class="card-header">标签</div>
+        <div class="card-body">
+            <a  th:each="tag : ${fragment.tags}" th:href="${'/index.html?tag='+tag.name}" class="badge badge-primary" style="margin-right: 1em" th:text="${tag.name+' ('+tag.size+')'}">Java(12)</a> &nbsp;
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">热门文章</div>
+        <div class="card-body">
+            <div th:each="article : ${fragment.hots}" >
+                <a  data-toggle="tooltip" data-placement="right"
+                    th:href="${'/detail/'+article.id+'.html'}" th:title="${article.title}"
+                    th:text="${article.title}"></a>
+                <span th:text="${'('+article.viewTimes+')'}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">友情连接</div>
+        <div class="card-body">
+            <div th:each="link : ${fragment.friends}" >
+                <a  data-toggle="tooltip" data-placement="right" th:href="${link.address}" th:title="${link.description}">
+                    <span class="oi oi-link-intact" th:title="${link.description}" aria-hidden="true"></span>
+                    <span th:text="${link.title}" ></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:fragment="commonFooter">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/plugins/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/marked.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/prettify.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/raphael.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/underscore.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/sequence-diagram.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/flowchart.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/editormd.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</footer>
+</body>
+</html>

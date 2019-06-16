@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import studio.greeks.blog.service.DetailService;
+import studio.greeks.blog.service.IndexService;
 import studio.greeks.blog.vo.DetailArticleVo;
 
 /**
@@ -18,11 +19,12 @@ import studio.greeks.blog.vo.DetailArticleVo;
 public class DetailController {
 
     @Autowired private DetailService detailService;
+    @Autowired private IndexService indexService;
 
     @GetMapping("/{id}.html")
     public String detail(Model model, @PathVariable Integer id){
         DetailArticleVo detailArticleVo = detailService.getArticle(id);
-        model.addAttribute("title", "吴昭 | "+ detailArticleVo.getTitle());
+        model.addAttribute("fragment", indexService.getFragmentVo(detailArticleVo.getTitle(), "index"));
         model.addAttribute("article", detailArticleVo);
         return "detail.html";
     }

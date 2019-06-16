@@ -19,10 +19,9 @@ public class IndexController {
 
     @Autowired private IndexService indexService;
 
-    @RequestMapping("/")
+    @RequestMapping({"/","/index.html","/index.htm"})
     public String index(Model model, String tag){
-        model.addAttribute("tags", indexService.findAllTag());
-        model.addAttribute("hots", indexService.getHotsArticle());
+        model.addAttribute("fragment", indexService.getFragmentVo("首页", "index"));
         model.addAttribute("tag", null == tag?"":("："+tag));
         return "index";
     }

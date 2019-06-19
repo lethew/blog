@@ -93,7 +93,7 @@
         <div class="card-header">友情连接</div>
         <div class="card-body">
             <div th:each="link : ${fragment.friends}" >
-                <a  data-toggle="tooltip" data-placement="right" th:href="${link.address}" th:title="${link.description}">
+                <a  data-toggle="tooltip" data-placement="right" th:href="${link.address}" th:title="${link.description}" target="_blank">
                     <span class="oi oi-link-intact" th:title="${link.description}" aria-hidden="true"></span>
                     <span th:text="${link.title}" ></span>
                 </a>
@@ -114,11 +114,7 @@
     <script th:src="@{/plugins/editor-md/lib/flowchart.min.js}"></script>
     <script th:src="@{/plugins/editor-md/lib/editormd.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
+    <script th:src="@{/js/main.js}"></script>
 </footer>
 </body>
 </html>

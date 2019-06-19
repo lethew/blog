@@ -38,7 +38,7 @@
                     <hr/>
                 </div>
                 <div class="card-body padding-top-bottom-05" style="text-align: center;">
-                    <a v-on:click="loadArticle" class="font-weight-light">{{loadString}}</a>
+                    <a class="font-weight-light">{{loadString}}</a>
                 </div>
             </div>
         </div>
@@ -46,86 +46,7 @@
     </div>
 </div>
 
-<div id="parse-md" style="display: none"><textarea></textarea></div>
 <div th:include="common/nav::commonFooter"></div>
-<script>
-    function formatNumber(n) {
-        n = n.toString()
-        return n[1] ? n : '0' + n
-    }
-    function formatTime(date,format) {
-
-        var formateArr  = ['Y','M','D','h','m','s'];
-        var returnArr   = [];
-
-        returnArr.push(date.getFullYear());
-        returnArr.push(formatNumber(date.getMonth() + 1));
-        returnArr.push(formatNumber(date.getDate()));
-
-        returnArr.push(formatNumber(date.getHours()));
-        returnArr.push(formatNumber(date.getMinutes()));
-        returnArr.push(formatNumber(date.getSeconds()));
-
-        for (var i in returnArr)
-        {
-            format = format.replace(formateArr[i], returnArr[i]);
-        }
-        return format;
-    }
-    Window.prototype.getNowFormatDate = function(time) {
-        var date = new Date(time); // 增加8小时
-        return formatTime(date, 'Y-M-D h:m:s')
-    }
-
-    Window.prototype.parseMd = function (md) {
-        var testEditor = editormd.markdownToHTML("parse-md", {
-            markdown:md,
-            htmlDecode      : "style,script,iframe",  // you can filter tags decode
-            emoji           : true,
-            taskList        : true,
-            tex             : true,  // 默认不解析
-            flowChart       : false,  // 默认不解析
-            sequenceDiagram : true,  // 默认不解析
-        });
-        var html = testEditor.html();
-        testEditor.html("");
-        return html;
-    }
-
-    var vm = new Vue({
-        el:"#app",
-        data:{
-            loadString:"加载更多",
-            page_index:0,
-            articles:[]
-        },
-        created:function(){
-            this.loadArticle();
-        },
-        methods:{
-            loadArticle:function () {
-                let _this = this;
-                if(_this.page_index >= 0){
-                    let tag_key = $("#tag-span").html()
-                    let url = "/article/"+_this.page_index;
-                    if(tag_key){
-                        url += "/"+tag_key.substring(1);
-                    }
-                    $.get(url, function (response) {
-                        console.log(response)
-                        if(response.data.next){
-                            _this.page_index += 1;
-                        }else{
-                            _this.page_index = -1;
-                            _this.loadString = "没有了!!!!";
-                        }
-                        _this.articles = _this.articles.concat(response.data.data)
-
-                    })
-                }
-            }
-        }
-    });
-</script>
+<script language="JavaScript" th:src="@{/js/index.js}"></script>
 </body>
 </html>

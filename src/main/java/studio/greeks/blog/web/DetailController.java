@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import studio.greeks.blog.restful.Response;
 import studio.greeks.blog.service.DetailService;
 import studio.greeks.blog.service.IndexService;
 import studio.greeks.blog.vo.DetailArticleVo;
@@ -27,5 +29,11 @@ public class DetailController {
         model.addAttribute("fragment", indexService.getFragmentVo(detailArticleVo.getTitle(), "index"));
         model.addAttribute("article", detailArticleVo);
         return "detail.html";
+    }
+
+    @GetMapping("/comment/{id}/{pageIndex}")
+    @ResponseBody
+    public Response page(@PathVariable Integer id, @PathVariable Integer pageIndex){
+        return Response.success(detailService.getComment(id, pageIndex));
     }
 }

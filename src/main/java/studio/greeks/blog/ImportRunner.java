@@ -49,59 +49,59 @@ public class ImportRunner implements ApplicationRunner {
             link.setUpdateTime(new Date());
             linkRepository.save(link);
         }
-//        ResultSet resultSet = statement.executeQuery("select * from b3_solo_article");
-//        while (resultSet.next()){
-//            Article article = new Article();
-//            article.setTitle(resultSet.getString("articleTitle"));
-//            article.setSummary(resultSet.getString("articleAbstract"));
-//            article.setContent(resultSet.getString("articleContent"));
-//            article.setCreateTime(resultSet.getTimestamp("articleCreateDate"));
-//            article.setUpdateTime(resultSet.getTimestamp("articleUpdateDate"));
-//            article.setViewTimes(resultSet.getLong("articleViewCount"));
-//            article.setPublished(resultSet.getBoolean("articleIsPublished"));
-//            article.setPutTop(resultSet.getBoolean("articlePutTop"));
-//            article.setViewPassword(resultSet.getString("articleViewPwd"));
-//            article.setEditorType(resultSet.getString("articleEditorType"));
-//            String tags = resultSet.getString("articleTags");
-//            Set<Tag> tagSet = new HashSet<>();
-//            for (String tagName : tags.split(",")) {
-//                Tag tag = new Tag();
-//                tag.setName(tagName);
-//                Optional<Tag> one = tagRepository.findOne(Example.of(tag));
-//                if(one.isPresent()){
-//                    tag = one.get();
-//                }else {
-//                    tag = tagRepository.save(tag);
-//                }
-//                tagSet.add(tag);
-//            }
-//            article.setTags(tagSet);
-//            Article save = articleRepository.save(article);
-//            articleHashMap.put(save.getTitle(), save);
-//        }
-//        resultSet = statement.executeQuery("SELECT c.*, a.articleTitle FROM b3blog.b3_solo_comment c left join b3_solo_article a on c.commentOnId = a.oid");
-//        Map<String, Comment> commentMap = new HashMap<>();
-//        while (resultSet.next()){
-//            Comment comment = new Comment();
-//            comment.setContent(resultSet.getString("commentContent"));
-//            comment.setArticle(articleHashMap.get(resultSet.getString("articleTitle")));
-//            comment.setAuthor(resultSet.getString("commentName"));
-//            comment.setEmail(resultSet.getString("commentEmail"));
-//            comment.setCreateTime(resultSet.getTimestamp("commentDate"));
-//            comment = commentRepository.save(comment);
-//            String oid = resultSet.getString("oid");
-//            commentMap.put(oid, comment);
-//            String originalId = resultSet.getString("commentOriginalCommentId");
-//            if(Strings.isBlank(originalId)){
-//                comment.setRootId(comment.getId());
-//                comment.setParentId(comment.getId());
-//            }else{
-//                Comment oComment = commentMap.get(originalId);
-//                comment.setRootId(oComment.getRootId());
-//                comment.setParentId(oComment.getId());
-//            }
-//            commentRepository.save(comment);
-//        }
+        resultSet = statement.executeQuery("select * from b3_solo_article");
+        while (resultSet.next()){
+            Article article = new Article();
+            article.setTitle(resultSet.getString("articleTitle"));
+            article.setSummary(resultSet.getString("articleAbstract"));
+            article.setContent(resultSet.getString("articleContent"));
+            article.setCreateTime(resultSet.getTimestamp("articleCreateDate"));
+            article.setUpdateTime(resultSet.getTimestamp("articleUpdateDate"));
+            article.setViewTimes(resultSet.getLong("articleViewCount"));
+            article.setPublished(resultSet.getBoolean("articleIsPublished"));
+            article.setPutTop(resultSet.getBoolean("articlePutTop"));
+            article.setViewPassword(resultSet.getString("articleViewPwd"));
+            article.setEditorType(resultSet.getString("articleEditorType"));
+            String tags = resultSet.getString("articleTags");
+            Set<Tag> tagSet = new HashSet<>();
+            for (String tagName : tags.split(",")) {
+                Tag tag = new Tag();
+                tag.setName(tagName);
+                Optional<Tag> one = tagRepository.findOne(Example.of(tag));
+                if(one.isPresent()){
+                    tag = one.get();
+                }else {
+                    tag = tagRepository.save(tag);
+                }
+                tagSet.add(tag);
+            }
+            article.setTags(tagSet);
+            Article save = articleRepository.save(article);
+            articleHashMap.put(save.getTitle(), save);
+        }
+        resultSet = statement.executeQuery("SELECT c.*, a.articleTitle FROM b3blog.b3_solo_comment c left join b3_solo_article a on c.commentOnId = a.oid");
+        Map<String, Comment> commentMap = new HashMap<>();
+        while (resultSet.next()){
+            Comment comment = new Comment();
+            comment.setContent(resultSet.getString("commentContent"));
+            comment.setArticle(articleHashMap.get(resultSet.getString("articleTitle")));
+            comment.setAuthor(resultSet.getString("commentName"));
+            comment.setEmail(resultSet.getString("commentEmail"));
+            comment.setCreateTime(resultSet.getTimestamp("commentDate"));
+            comment = commentRepository.save(comment);
+            String oid = resultSet.getString("oid");
+            commentMap.put(oid, comment);
+            String originalId = resultSet.getString("commentOriginalCommentId");
+            if(Strings.isBlank(originalId)){
+                comment.setRootId(comment.getId());
+                comment.setParentId(comment.getId());
+            }else{
+                Comment oComment = commentMap.get(originalId);
+                comment.setRootId(oComment.getRootId());
+                comment.setParentId(oComment.getId());
+            }
+            commentRepository.save(comment);
+        }
 
     }
 }

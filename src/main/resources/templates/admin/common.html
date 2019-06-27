@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="commonHeader(links,styles)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>忧忧博客 | 后台管理平台</title>
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/plugins/editor-md/css/editormd.css}" />
+    <link rel="stylesheet" th:href="@{/plugins/open-iconic/font/css/open-iconic-bootstrap.min.css}"/>
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+    <!--/* Per-page placeholder for additional styles */-->
+    <th:block th:replace="${styles}" />
+</head>
+<body>
+<div th:fragment="topNav">
+
+</div>
+<div th:fragment="leftNav">
+
+</div>
+
+
+
+<footer th:fragment="commonFooter">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/plugins/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/marked.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/prettify.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/raphael.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/underscore.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/sequence-diagram.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/flowchart.min.js}"></script>
+    <script th:src="@{/plugins/editor-md/lib/editormd.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script th:src="@{/js/main.js}"></script>
+</footer>
+</body>
+</html>
